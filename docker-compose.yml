@@ -1,0 +1,21 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: pern_photo_app
+    environment:
+      POSTGRES_USER: crown
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: pern_photo_app
+    volumes:
+      - /data/pern_photo_app:/docker-entrypoint-initdb.d/
+    networks:
+      - overlay
+    ports:
+      - "5430:5430"
+    command: -p 5430
+volumes:
+  postgres-db:
+  
+networks:
+  overlay:
