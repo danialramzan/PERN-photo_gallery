@@ -51,7 +51,7 @@ export class UserController {
     }
 
     async update(request: Request, response: Response, next: NextFunction) {
-        const { id, firstName, lastName, age } = request.body;
+        const { id, firstName, lastName, username, password } = request.body;
 
         if (!id) {
             return "Missing 'id' in the request body.";
@@ -68,7 +68,8 @@ export class UserController {
         // Update user properties
         userToUpdate.firstName = firstName;
         userToUpdate.lastName = lastName;
-        userToUpdate.age = age;
+        userToUpdate.username = username;
+        userToUpdate.password = password;
 
         // Save the updated user
         await this.userRepository.save(userToUpdate);

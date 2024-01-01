@@ -3,7 +3,11 @@ import * as bodyParser from "body-parser"
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
+
 import { User } from "./entity/User"
+import { Photo } from "./entity/Photo"
+import { Comment } from "./entity/Comment"
+
 import { Index } from "typeorm"
 import { ALL } from "dns"
 
@@ -43,15 +47,31 @@ AppDataSource.initialize().then(async () => {
         AppDataSource.manager.create(User, {
             firstName: "Timber",
             lastName: "Saw",
-            age: 27
+            username: "timbsaw",
+            password: "password",
         })
     )
+
+
+    // @PrimaryGeneratedColumn()
+    // user_id: number;
+  
+    // @Column()
+    // username: string;
+  
+    // @Column()
+    // password: string;
+  
+    // @Column()
+    // email: string;
+  
 
     await AppDataSource.manager.save(
         AppDataSource.manager.create(User, {
             firstName: "Phantom",
             lastName: "Assassin",
-            age: 24
+            username: "phantomin",
+            password: "phantomiscool",
         })
     )
 
