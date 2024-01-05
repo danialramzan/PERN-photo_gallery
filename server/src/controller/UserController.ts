@@ -4,6 +4,7 @@ import {User} from "../entity/User"
 
 // JS Style
 const jwtGenerator = require("../utils/jwtGenerator");
+const authorization = require("../middleware/authorization");
 
 export class UserController {
 
@@ -37,6 +38,13 @@ export class UserController {
             console.log(existingUser); // Log the existingUser object
             return "Username already in use!"
         }
+
+
+        // validation
+        if (![firstName, lastName, username, password].every(Boolean)) {
+            return "one or more fields are empty!";
+        }
+
         const user = Object.assign(new User(), {
             firstName,
             lastName,
@@ -54,9 +62,23 @@ export class UserController {
         //
 
 
+        // decide whether to grant auth on registration or require login after registration
 
-        return this.userRepository.save(user)
+        //auth on registration
+
+        await this.userRepository.save(user)
+        return token
+
+        // require login after registration
+            // return this.userRepository.save(user)
+            // handle no printing of information to client in other file
+
+
+
+
     }
+
+
 
     async login(request: Request, response: Response, next: NextFunction) {
         const {username, password} = request.body;
@@ -70,6 +92,12 @@ export class UserController {
 
         if (existingUser.password != password) {
             return "Incorrect Password! Please try again!"
+        }
+
+        // validation
+
+        if (![username, password].every(Boolean)) {
+            return "one or more fields are empty!";
         }
 
         if (existingUser.password == password && existingUser.username == username) {
@@ -87,6 +115,16 @@ export class UserController {
 
 
 
+    }
+
+    async verify(request: Request, response: Response, next: NextFunction) {
+        authorization(request, response, () => {
+            try {
+                response.json(true);
+            } catch (err) {
+                response.json(false);
+            }
+        });
     }
 
 
