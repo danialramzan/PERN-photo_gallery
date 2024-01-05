@@ -1,6 +1,8 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
+import {Photo} from "./entity/Photo";
+import {Comment} from "./entity/Comment";
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -11,7 +13,7 @@ export const AppDataSource = new DataSource({
     database: "pern_photo_app",
     synchronize: true,
     logging: false,
-    entities: [User],
+    entities: [User, Photo, Comment],
     migrations: [],
     subscribers: [],
 })

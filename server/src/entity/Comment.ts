@@ -1,21 +1,23 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
+import { Photo } from './Photo';
 
 @Entity()
-export class Photo {
+export class Comment {
   @PrimaryGeneratedColumn()
-  photo_id: number;
+  comment_id: number;
 
   @ManyToOne(type => User)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'id' })
   user: User;
 
-  @Column()
-  image_url: string;
+  @ManyToOne(type => Photo)
+  @JoinColumn({ name: 'photo_id' })
+  photo: Photo;
 
   @Column()
-  description: string;
+  comment: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  upload_date: Date;
+  comment_date: Date;
 }

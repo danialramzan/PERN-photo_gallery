@@ -1,8 +1,10 @@
 import * as express from "express"
 import * as bodyParser from "body-parser"
+import * as cors from "cors"
+
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
-import { Routes } from "./routes"
+import { UserRoutes } from "./routes/UserRoutes"
 
 import { User } from "./entity/User"
 import { Photo } from "./entity/Photo"
@@ -15,12 +17,23 @@ AppDataSource.initialize().then(async () => {
 
     // create express app
     const app = express()
-    app.use(bodyParser.json())
+
+
+    //middleware
+
+    app.use(bodyParser.json()) // parses json reqs in post, put methods
+    app.use(cors())
+
+
+
+
 
     // register express routes from defined application routes
-    Routes.forEach(route => {
+    UserRoutes.forEach(route => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
+
             const result = (new (route.controller as any))[route.action](req, res, next)
+
             if (result instanceof Promise) {
                 result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
 
@@ -29,6 +42,10 @@ AppDataSource.initialize().then(async () => {
             }
         })
     })
+
+
+
+
 
     // setup express app here
     // ...
