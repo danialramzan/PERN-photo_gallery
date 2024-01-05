@@ -3,11 +3,11 @@ require("dotenv").config();
 
 module.exports = function(req, res, next) {
     // Get token from header
-    console.log(req.header);
     const token = req.header("jwt_token");
 
     // Check if not token
-    console.log(token);
+
+        //console.log(token);
     if (!token) {
         // return res.status(403).json({ msg: "authorization denied" });
         return res.status(403).json(false);
@@ -24,7 +24,7 @@ module.exports = function(req, res, next) {
         req.lastName = lastName;
         next();
     } catch (err) {
-        res.status(401).json(false);
-        // res.status(401).json({ msg: "Token is not valid" });
+       // res.status(401).json(false);
+        res.status(401).json({ msg: "Token is not valid" });
     }
 };

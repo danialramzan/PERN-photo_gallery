@@ -36,4 +36,9 @@ export const UserRoutes = [{
         route: "/auth/verify",
         controller: UserController,
         action: "verify",
+}, {
+    method: "get",
+        route: "/home",
+        controller: UserController,
+        action: "home",
 }]

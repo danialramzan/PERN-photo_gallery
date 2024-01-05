@@ -118,8 +118,19 @@ export class UserController {
     }
 
     async verify(request: Request, response: Response, next: NextFunction) {
+        authorization(request, response,  () => {
+            try {
+               // await response.json(true);
+            } catch (err) {
+                response.json(false);
+            }
+        });
+    }
+
+    async home(request: Request, response: Response, next: NextFunction) {
         authorization(request, response, () => {
             try {
+                console.log(request.user.firstName);
                 response.json(true);
             } catch (err) {
                 response.json(false);
