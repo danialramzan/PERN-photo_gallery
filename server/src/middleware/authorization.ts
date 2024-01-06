@@ -9,8 +9,7 @@ module.exports = function(req, res, next) {
 
         //console.log(token);
     if (!token) {
-        // return res.status(403).json({ msg: "authorization denied" });
-        return res.status(403).json(false);
+        return {message: "authorization denied", statusCode: 403, defaultExecute: true}
     }
 
     // Verify token
@@ -24,7 +23,6 @@ module.exports = function(req, res, next) {
         req.lastName = lastName;
         next();
     } catch (err) {
-       // res.status(401).json(false);
-        res.status(401).json({ msg: "Token is not valid" });
+        return {message: "Token is not valid", statusCode: 401, defaultExecute: true}
     }
 };

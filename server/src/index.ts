@@ -32,13 +32,21 @@ AppDataSource.initialize().then(async () => {
     UserRoutes.forEach(route => {
         (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
 
-            const result = (new (route.controller as any))[route.action](req, res, next)
+            const {result, statusCode, defaultExecute} = (new (route.controller as any))[route.action](req, res, next)
 
             if (result instanceof Promise) {
-                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
+
+                // handle promise
+                if (defaultExecute) {
+                    result.then(result => result !== null && result !== undefined ? res.status(statusCode).send(result) : undefined)
+                }
 
             } else if (result !== null && result !== undefined) {
-                res.json(result)
+
+                // handle non-promise (syncronous) result
+                if (defaultExecute) {
+                    res.status(statusCode).json(result)
+                }
             }
         })
     })
