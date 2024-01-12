@@ -126,28 +126,114 @@ export class UserController {
 
     }
 
+    // CHECK HOW TO RETURN MESSAGE (IT IS UNDEFINED APPARENTLY)
+
+    // async verify(request: Request, response: Response, next: NextFunction) {
+    //     authorization(request, response,  () => {
+    //         try {
+    //            // await response.json(true);
+    //             response.json(true);
+    //             return {message: true, statusCode: 200, defaultExecute: true}
+    //         } catch (err) {
+    //             return {message: false, statusCode: 200, defaultExecute: true}
+    //         }
+    //     });
+    // }
+
+    // async verify(request: Request, response: Response, next: NextFunction) {
+    //
+    //     // execute authorization function
+    //
+    //     // if authorization succeeds, return true using return {message: true, statusCode: 200, defaultExecute: true}
+    //
+    //     // else return {message: false, statusCode: 200, defaultExecute: true} (because authorization failed)
+    //
+    //
+    //     });
+    // }
+
     async verify(request: Request, response: Response, next: NextFunction) {
-        authorization(request, response,  () => {
-            try {
-               // await response.json(true);
-                response.json(true);
-                return {message: true, statusCode: 200, defaultExecute: true}
-            } catch (err) {
-                return {message: false, statusCode: 200, defaultExecute: true}
-            }
-        });
+        // Call the authorization middleware
+
+        try {
+        // calling the middleware
+        const authResult = authorization(request, () => {});
+        const {message, statusCode, defaultExecute } = authResult;
+
+        // const username = request.username;
+        // const firstName = request.firstName;
+        // const lastName = request.lastName;
+        // console.log(username);
+        // console.log(firstName);
+        // console.log(lastName);
+        // console.log(message);
+
+        if (message == "Valid Token!") {
+            return {message: true, statusCode: 200, defaultExecute: true}
+        }
+        else {
+            return {message: false, statusCode: 401, defaultExecute: true}
+        }
+        } catch (error) {
+            // If an error occurs during async logic, respond with an error
+            return {message: "Internal Server Error", statusCode: 500, defaultExecute: true}
+        }
     }
 
-    async home(request: Request, response: Response, next: NextFunction) {
-        authorization(request, response, () => {
-            try {
-                console.log(request.user.firstName);
+    // async verify(request: Request, response: Response, next: NextFunction) {
+    //     try {
+    //         await authorization(request, response, next);
+    //         // If authorization succeeds, return true
+    //         return {message: true, statusCode: 200, defaultExecute: true };
+    //     } catch (err) {
+    //         // If authorization fails, throw an error
+    //         //next(err);
+    //         return {message: false, statusCode: 403, defaultExecute: true };
+    //     }
+    // }
+
+
+    async dashboard(request: Request, response: Response, next: NextFunction) {
+        // Call the authorization middleware
+
+        try {
+            // calling the middleware
+            const authResult = authorization(request, () => {});
+            const {message, statusCode, defaultExecute } = authResult;
+
+            // const username = request.username;
+            // const firstName = request.firstName;
+            // const lastName = request.lastName;
+            // console.log(username);
+            // console.log(firstName);
+            // console.log(lastName);
+            // console.log(message);
+
+            if (message == "Valid Token!") {
                 return {message: true, statusCode: 200, defaultExecute: true}
-            } catch (err) {
-                return {message: false, statusCode: 200, defaultExecute: true}
             }
-        });
+            else {
+                return {message: false, statusCode: 401, defaultExecute: true}
+            }
+        } catch (error) {
+            // If an error occurs during async logic, respond with an error
+            return {message: "Internal Server Error", statusCode: 500, defaultExecute: true}
+        }
     }
+
+    // OLD
+
+    // async home(request: Request, response: Response, next: NextFunction) {
+    //     authorization(request, response, () => {
+    //         try {
+    //             console.log(request.user.firstName);
+    //             response.json(true);
+    //             return {message: true, statusCode: 200, defaultExecute: true}
+    //         } catch (err) {
+    //             return {message: false, statusCode: 200, defaultExecute: true}
+    //         }
+    //     });
+    // }
 }
 
 // DEPRECATED METHODS

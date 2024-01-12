@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-module.exports = function(req, res, next) {
+module.exports = function(req, next) {
     // Get token from header
     const token = req.header("jwt_token");
 
@@ -14,14 +14,15 @@ module.exports = function(req, res, next) {
 
     // Verify token
     try {
-
-        const decoded = jwt.verify(token, process.env.jwtSecret);
-        const { username, firstName, lastName } = decoded;
-
-        req.user = username;
+        const {user: { id, firstName, lastName } } = jwt.verify(token, process.env.jwtSecret);
+        console.log(id)
+        console.log(firstName)
+        console.log(lastName)
+        req.username = id;
         req.firstName = firstName;
         req.lastName = lastName;
         next();
+        return {message: "Valid Token!", statusCode: 401, defaultExecute: true}
     } catch (err) {
         return {message: "Token is not valid", statusCode: 401, defaultExecute: true}
     }
