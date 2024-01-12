@@ -15,9 +15,6 @@ module.exports = function(req, next) {
     // Verify token
     try {
         const {user: { id, firstName, lastName } } = jwt.verify(token, process.env.jwtSecret);
-        console.log(id)
-        console.log(firstName)
-        console.log(lastName)
         req.username = id;
         req.firstName = firstName;
         req.lastName = lastName;
