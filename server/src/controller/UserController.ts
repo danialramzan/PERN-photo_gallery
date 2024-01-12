@@ -210,7 +210,7 @@ export class UserController {
             // console.log(message);
 
             if (message == "Valid Token!") {
-                return {message: true, statusCode: 200, defaultExecute: true}
+                return {message: "username: " + request.username, statusCode: 200, defaultExecute: true}
             }
             else {
                 return {message: false, statusCode: 401, defaultExecute: true}
