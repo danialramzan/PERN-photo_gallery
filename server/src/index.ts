@@ -30,18 +30,65 @@ AppDataSource.initialize().then(async () => {
 
     // register express routes from defined application routes
     UserRoutes.forEach(route => {
-        (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
+        (app as any)[route.method](route.route, async (req: Request, res: Response, next: Function) => {
 
-            const result = (new (route.controller as any))[route.action](req, res, next)
+            const returnValues: {
+                message: any,
+                statusCode: number,
+                defaultExecute: boolean
+            } = await (new (route.controller as any))[route.action](req, res, next)
 
-            if (result instanceof Promise) {
-                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
+            if (returnValues.message instanceof Promise) {
 
-            } else if (result !== null && result !== undefined) {
-                res.json(result)
+                // handle promise
+                if (returnValues.defaultExecute) {
+                    returnValues.message.then(result => result !== null && result !== undefined ? res.status(returnValues.statusCode).send(result) : undefined)
+                }
+
+            } else if (returnValues.message !== null && returnValues.message !== undefined) {
+
+                // handle non-promise (synchronous) result
+                if (returnValues.defaultExecute) {
+                    res.status(returnValues.statusCode).json(returnValues.message)
+                }
             }
         })
     })
+
+    // // register express routes from defined application routes
+    // UserRoutes.forEach(route => {
+    //     (app as any)[route.method](route.route, async (req: Request, res: Response, next: Function) => {
+    //
+    //         const returnValues: {
+    //             message: any,
+    //             statusCode: number,
+    //             defaultExecute: boolean
+    //         } = await (new (route.controller as any))[route.action](req, res, next)
+    //
+    //         if (returnValues.message instanceof Promise) {
+    //             // handle promise
+    //             if (returnValues.defaultExecute) {
+    //                 try {
+    //                     const result = await returnValues.message;
+    //                     if (result !== null && result !== undefined) {
+    //                         res.status(returnValues.statusCode).send(result);
+    //                     }
+    //                 } catch (error) {
+    //                     // Handle promise rejection/error
+    //                     console.error(error);
+    //                     res.status(500).send("Internal Server Error");
+    //                 }
+    //             }
+    //         } else if (returnValues.message !== null && returnValues.message !== undefined) {
+    //             // handle non-promise (synchronous) result
+    //             if (returnValues.defaultExecute) {
+    //                 res.status(returnValues.statusCode).json(returnValues.message);
+    //             }
+    //         }
+    //
+    //     })
+    //})
+
 
 
 
