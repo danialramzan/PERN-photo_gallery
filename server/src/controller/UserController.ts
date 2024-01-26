@@ -80,7 +80,7 @@ export class UserController {
 
         // require login after registration
             // return this.userRepository.save(user)
-            // handle no printing of information to client in other file
+            // handle no printing of information to client_old in other file
 
     }
 
